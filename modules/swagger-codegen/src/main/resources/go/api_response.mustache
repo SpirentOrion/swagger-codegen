@@ -2,15 +2,21 @@
 package {{packageName}}
 
 import (
+	"encoding/json"
+	"encoding/xml"
+	"errors"
+	"fmt"
+	"mime"
 	"net/http"
+	"github.com/go-resty/resty"
 )
 
 type APIResponse struct {
-	*http.Response
+	*resty.Response
 	Message string `json:"message,omitempty"`
 }
 
-func NewAPIResponse(r *http.Response) *APIResponse {
+func NewAPIResponse(r *resty.Response) *APIResponse {
 
 	response := &APIResponse{Response: r}
 	return response
@@ -20,4 +26,28 @@ func NewAPIResponseWithError(errorMessage string) *APIResponse {
 
 	response := &APIResponse{Message: errorMessage}
 	return response
+}
+
+func ReadResponse(resp *resty.Response, v interface{}) (err error) {
+	ct := resp.Header().Get(http.CanonicalHeaderKey("Content-Type"))
+	switch mt, _, _ := mime.ParseMediaType(ct); mt {
+	case "application/json":
+		err = json.Unmarshal(resp.Body(), &v)
+		return err
+	case "application/xml":
+		err = xml.Unmarshal(resp.Body(), &v)
+		return err
+	case "application/octet-stream":
+		switch v.(type) {
+		case *string:
+			s := v.(*string)
+			o := string(resp.Body())
+			*s = o
+			return nil
+		}
+		return errors.New("Invalid string pointer datatype")
+	default:
+	    errMsg := fmt.Sprintf("Unsupported media type: %s", ct)
+		return errors.New(errMsg)
+	}
 }

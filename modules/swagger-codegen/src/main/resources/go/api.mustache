@@ -8,7 +8,7 @@ import (
 	"errors"
 	"net/url"
 	{{#imports}}"{{import}}"
-{{/imports}}
+    {{/imports}}
 )
 
 type {{classname}} struct {
@@ -39,7 +39,7 @@ func New{{classname}}WithBasePath(basePath string) *{{classname}} {
 {{#allParams}} * @param {{paramName}} {{description}}
 {{/allParams}} * @return {{#returnType}}{{^isListContainer}}*{{/isListContainer}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}
  */
-func (a {{{classname}}}) {{{nickname}}}({{#allParams}}{{paramName}} {{{dataType}}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) ({{#returnType}}{{^isListContainer}}*{{/isListContainer}}{{{returnType}}}, {{/returnType}}*APIResponse, error) {
+func (a {{classname}}) {{nickname}}({{#allParams}}{{paramName}} {{{dataType}}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) ({{#returnType}}{{^isListContainer}}*{{/isListContainer}}{{{returnType}}}, {{/returnType}}*APIResponse, error) {
 
 	var httpMethod = "{{httpMethod}}"
 	// create path and map variables
@@ -96,7 +96,7 @@ func (a {{{classname}}}) {{{nickname}}}({{#allParams}}{{paramName}} {{{dataType}
 	{{/queryParams}}{{/hasQueryParams}}
 
 	// to determine the Content-Type header
-	localVarHttpContentTypes := []string{ {{#consumes}}"{{{mediaType}}}", {{/consumes}} }
+	localVarHttpContentTypes := []string{ {{#produces}}"{{{mediaType}}}", {{/produces}} }
 
 	// set Content-Type header
 	localVarHttpContentType := a.Configuration.APIClient.SelectHeaderContentType(localVarHttpContentTypes)
@@ -105,8 +105,7 @@ func (a {{{classname}}}) {{{nickname}}}({{#allParams}}{{paramName}} {{{dataType}
 	}
 	// to determine the Accept header
 	localVarHttpHeaderAccepts := []string{
-		{{#produces}}"{{{mediaType}}}",
-{{/produces}}	}
+		{{#consumes}}"{{{mediaType}}}", {{/consumes}} }
 
 	// set Accept header
 	localVarHttpHeaderAccept := a.Configuration.APIClient.SelectHeaderAccept(localVarHttpHeaderAccepts)
@@ -118,9 +117,9 @@ func (a {{{classname}}}) {{{nickname}}}({{#allParams}}{{paramName}} {{{dataType}
 	headerParams["{{baseName}}"] = {{paramName}}
 {{/headerParams}}{{/hasHeaderParams}}{{#hasFormParams}}
 {{#formParams}}{{#isFile}}
-	fbs, _ := ioutil.ReadAll(file)
+	fbs, _ := ioutil.ReadAll({{paramName}})
 	fileBytes = fbs
-	fileName = file.Name(){{/isFile}}
+	fileName = {{paramName}}.Name(){{/isFile}}
 {{^isFile}}	formParams["{{paramName}}"] = {{paramName}}{{/isFile}}{{/formParams}}{{/hasFormParams}}{{#hasBodyParam}}
 {{#bodyParams}}	// body params
 	postBody = &{{paramName}}
@@ -128,10 +127,13 @@ func (a {{{classname}}}) {{{nickname}}}({{#allParams}}{{paramName}} {{{dataType}
 {{#returnType}}	var successPayload = new({{returnType}}){{/returnType}}
 	httpResponse, err := a.Configuration.APIClient.CallAPI(path, httpMethod, postBody, headerParams, queryParams, formParams, fileName, fileBytes)
 	if err != nil {
-		return {{#returnType}}{{#isListContainer}}*{{/isListContainer}}successPayload, {{/returnType}}NewAPIResponse(httpResponse.RawResponse), err
+		return {{#returnType}}{{#isListContainer}}*{{/isListContainer}}successPayload, {{/returnType}}NewAPIResponse(httpResponse), err
 	}
+
 {{#returnType}}
-	err = json.Unmarshal(httpResponse.Body(), &successPayload){{/returnType}}
-	return {{#returnType}}{{#isListContainer}}*{{/isListContainer}}successPayload, {{/returnType}}NewAPIResponse(httpResponse.RawResponse), err
+	err = json.Unmarshal(httpResponse.Body(), &successPayload)
+	err = ReadResponse(httpResponse, successPayload)
+{{/returnType}}
+	return {{#returnType}}{{#isListContainer}}*{{/isListContainer}}successPayload, {{/returnType}}NewAPIResponse(httpResponse), err
 }
 {{/operation}}{{/operations}}
