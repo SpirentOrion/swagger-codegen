@@ -254,15 +254,18 @@ public class InlineModelResolver {
                 Model model = modelFromProperty(op, modelName);
 
                 String existing = matchGenerated(model);
+                RefProperty propToUpdate;
 
                 if (existing != null) {
-                    propsToUpdate.put(key, new RefProperty(existing));
+                    propToUpdate = new RefProperty(existing);
                 } else {
-                    propsToUpdate.put(key, new RefProperty(modelName));
+                    propToUpdate = new RefProperty(modelName);
                     modelsToAdd.put(modelName, model);
                     addGenerated(modelName, model);
                     swagger.addDefinition(modelName, model);
                 }
+                propToUpdate.setRequired(property.getRequired());
+                propsToUpdate.put(key, propToUpdate);
             } else if (property instanceof ArrayProperty) {
                 ArrayProperty ap = (ArrayProperty) property;
                 Property inner = ap.getItems();
