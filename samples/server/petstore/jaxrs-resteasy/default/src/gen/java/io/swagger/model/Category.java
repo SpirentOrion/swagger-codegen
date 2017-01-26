@@ -3,11 +3,13 @@ package io.swagger.model;
 import java.util.Objects;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
+import javax.validation.constraints.*;
+import io.swagger.annotations.*;
 
+@ApiModel(description="A category for a pet")
 
-
-
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaResteasyServerCodegen", date = "2016-07-01T21:32:05.980+08:00")
 public class Category   {
   
   private Long id = null;
@@ -16,6 +18,7 @@ public class Category   {
   /**
    **/
   
+  @ApiModelProperty(example = "null", value = "")
   @JsonProperty("id")
   public Long getId() {
     return id;
@@ -27,6 +30,7 @@ public class Category   {
   /**
    **/
   
+  @ApiModelProperty(example = "null", value = "")
   @JsonProperty("name")
   public String getName() {
     return name;

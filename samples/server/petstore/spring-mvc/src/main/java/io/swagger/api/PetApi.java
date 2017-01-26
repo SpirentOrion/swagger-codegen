@@ -1,8 +1,8 @@
 package io.swagger.api;
 
-import io.swagger.model.Pet;
 import java.io.File;
 import io.swagger.model.ModelApiResponse;
+import io.swagger.model.Pet;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
+import javax.validation.constraints.*;
 
 @Api(value = "pet", description = "the pet API")
 public interface PetApi {
@@ -47,7 +47,8 @@ public interface PetApi {
     @RequestMapping(value = "/pet/{petId}",
         produces = { "application/xml", "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> deletePet(@ApiParam(value = "Pet id to delete",required=true ) @PathVariable("petId") Long petId,@ApiParam(value = ""  ) @RequestHeader(value="api_key", required=false) String apiKey);
+    ResponseEntity<Void> deletePet(@ApiParam(value = "Pet id to delete",required=true ) @PathVariable("petId") Long petId,
+        @ApiParam(value = ""  ) @RequestHeader(value="api_key", required=false) String apiKey);
 
 
     @ApiOperation(value = "Finds Pets by status", notes = "Multiple status values can be provided with comma separated strings", response = Pet.class, responseContainer = "List", authorizations = {
@@ -62,7 +63,7 @@ public interface PetApi {
     @RequestMapping(value = "/pet/findByStatus",
         produces = { "application/xml", "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Pet>> findPetsByStatus(@ApiParam(value = "Status values that need to be considered for filter", required = true) @RequestParam(value = "status", required = true) List<String> status);
+    ResponseEntity<List<Pet>> findPetsByStatus( @NotNull @ApiParam(value = "Status values that need to be considered for filter", required = true, allowableValues = "AVAILABLE, PENDING, SOLD") @RequestParam(value = "status", required = true) List<String> status);
 
 
     @ApiOperation(value = "Finds Pets by tags", notes = "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.", response = Pet.class, responseContainer = "List", authorizations = {
@@ -77,7 +78,7 @@ public interface PetApi {
     @RequestMapping(value = "/pet/findByTags",
         produces = { "application/xml", "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Pet>> findPetsByTags(@ApiParam(value = "Tags to filter by", required = true) @RequestParam(value = "tags", required = true) List<String> tags);
+    ResponseEntity<List<Pet>> findPetsByTags( @NotNull @ApiParam(value = "Tags to filter by", required = true) @RequestParam(value = "tags", required = true) List<String> tags);
 
 
     @ApiOperation(value = "Find pet by ID", notes = "Returns a single pet", response = Pet.class, authorizations = {
@@ -122,7 +123,9 @@ public interface PetApi {
         produces = { "application/xml", "application/json" }, 
         consumes = { "application/x-www-form-urlencoded" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> updatePetWithForm(@ApiParam(value = "ID of pet that needs to be updated",required=true ) @PathVariable("petId") Long petId,@ApiParam(value = "Updated name of the pet" ) @RequestPart(value="name", required=false)  String name,@ApiParam(value = "Updated status of the pet" ) @RequestPart(value="status", required=false)  String status);
+    ResponseEntity<Void> updatePetWithForm(@ApiParam(value = "ID of pet that needs to be updated",required=true ) @PathVariable("petId") Long petId,
+        @ApiParam(value = "Updated name of the pet" ) @RequestPart(value="name", required=false)  String name,
+        @ApiParam(value = "Updated status of the pet" ) @RequestPart(value="status", required=false)  String status);
 
 
     @ApiOperation(value = "uploads an image", notes = "", response = ModelApiResponse.class, authorizations = {
@@ -137,6 +140,8 @@ public interface PetApi {
         produces = { "application/json" }, 
         consumes = { "multipart/form-data" },
         method = RequestMethod.POST)
-    ResponseEntity<ModelApiResponse> uploadFile(@ApiParam(value = "ID of pet to update",required=true ) @PathVariable("petId") Long petId,@ApiParam(value = "Additional data to pass to server" ) @RequestPart(value="additionalMetadata", required=false)  String additionalMetadata,@ApiParam(value = "file detail") @RequestPart("file") MultipartFile file);
+    ResponseEntity<ModelApiResponse> uploadFile(@ApiParam(value = "ID of pet to update",required=true ) @PathVariable("petId") Long petId,
+        @ApiParam(value = "Additional data to pass to server" ) @RequestPart(value="additionalMetadata", required=false)  String additionalMetadata,
+        @ApiParam(value = "file detail") @RequestPart("file") MultipartFile file);
 
 }

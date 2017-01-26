@@ -24,7 +24,7 @@ public interface StoreApi {
   
   @DELETE("/store/order/{orderId}")
   Void deleteOrder(
-    @Path("orderId") String orderId
+    @retrofit.http.Path("orderId") String orderId
   );
 
   /**
@@ -32,18 +32,17 @@ public interface StoreApi {
    * Async method
    * @param orderId ID of the order that needs to be deleted (required)
    * @param cb callback method
-   * @return void
    */
   
   @DELETE("/store/order/{orderId}")
   void deleteOrder(
-    @Path("orderId") String orderId, Callback<Void> cb
+    @retrofit.http.Path("orderId") String orderId, Callback<Void> cb
   );
   /**
    * Returns pet inventories by status
    * Sync method
    * Returns a map of status codes to quantities
-   * @return Map<String, Integer>
+   * @return Map&lt;String, Integer&gt;
    */
   
   @GET("/store/inventory")
@@ -54,7 +53,6 @@ public interface StoreApi {
    * Returns pet inventories by status
    * Async method
    * @param cb callback method
-   * @return void
    */
   
   @GET("/store/inventory")
@@ -71,7 +69,7 @@ public interface StoreApi {
   
   @GET("/store/order/{orderId}")
   Order getOrderById(
-    @Path("orderId") Long orderId
+    @retrofit.http.Path("orderId") Long orderId
   );
 
   /**
@@ -79,12 +77,11 @@ public interface StoreApi {
    * Async method
    * @param orderId ID of pet that needs to be fetched (required)
    * @param cb callback method
-   * @return void
    */
   
   @GET("/store/order/{orderId}")
   void getOrderById(
-    @Path("orderId") Long orderId, Callback<Order> cb
+    @retrofit.http.Path("orderId") Long orderId, Callback<Order> cb
   );
   /**
    * Place an order for a pet
@@ -96,7 +93,7 @@ public interface StoreApi {
   
   @POST("/store/order")
   Order placeOrder(
-    @Body Order body
+    @retrofit.http.Body Order body
   );
 
   /**
@@ -104,11 +101,10 @@ public interface StoreApi {
    * Async method
    * @param body order placed for purchasing the pet (required)
    * @param cb callback method
-   * @return void
    */
   
   @POST("/store/order")
   void placeOrder(
-    @Body Order body, Callback<Order> cb
+    @retrofit.http.Body Order body, Callback<Order> cb
   );
 }
