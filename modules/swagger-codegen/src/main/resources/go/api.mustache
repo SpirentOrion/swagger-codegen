@@ -20,7 +20,7 @@ import (
  *
  * ctx: Context containing meta-info for the request.
 {{#pathParams}} * @param {{paramName}} {{description}}
-{{/pathParams}} * @return *{{returnType}}
+{{/pathParams}} * @return *{{packageName}}.{{returnType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, error) {
 	var res {{packageName}}.{{returnType}}
@@ -34,14 +34,30 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
 }
 {{/hasPathParams}}
 {{^hasPathParams}}
-{{! Operation is POST}}
 {{#returnType}}
-{{! POST containing return type}}
+{{#isListContainer}}
+{{! POST containing list return type}}
 /**
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
- * @return *{{returnType}}
+ * @return *[]{{packageName}}.{{returnBaseType}}
+ */
+func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*[]{{packageName}}.{{returnBaseType}}, error) {
+	var res []{{packageName}}.{{returnBaseType}}
+	if _, err := c.Post(ctx, "{{contextPath}}{{path}}", value, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+{{/isListContainer}}
+{{^isListContainer}}
+{{! POST containing single item return type}}
+/**
+ * {{notes}}
+ *
+ * ctx: Context containing meta-info for the request.
+ * @return *{{packageName}}.{{returnType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, error) {
 	var res {{packageName}}.{{returnType}}
@@ -50,6 +66,7 @@ func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#b
 	}
 	return &res, nil
 }
+{{/isListContainer}}
 {{/returnType}}
 {{^returnType}}
 {{! POST without return type}}
@@ -68,7 +85,7 @@ func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#b
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
- * @return *{{returnType}}
+ * @return []{{packageName}}.{{returnBaseType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{returnBaseType}}, context.Context, error) {
 	var res []{{packageName}}.{{returnBaseType}}
@@ -86,7 +103,7 @@ func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{return
  *
  * ctx: Context containing meta-info for the request.
 {{#pathParams}} * @param {{paramName}} {{description}}
-{{/pathParams}} * @return *{{returnType}}
+{{/pathParams}} * @return *{{packageName}}.{{returnType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{packageName}}.{{returnType}}, error) {
 	var res {{packageName}}.{{returnType}}
