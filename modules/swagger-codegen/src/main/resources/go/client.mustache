@@ -1,0 +1,19 @@
+// DO NOT EDIT: This code is auto-generated from the YAML schema. Any changes made to this file will be lost.
+
+package v1
+
+import (
+	"net/url"
+
+    {{#customClientPackage}}client "{{customClientPackage}}"{{/customClientPackage}}
+	{{^customClientPackage}}"github.com/SpirentOrion/orion-api/common/client"{{/customClientPackage}}
+)
+
+type Client struct {
+	*client.Client
+}
+
+func New(baseUrl *url.URL) *Client {
+	{{#customClientPackage}}return &Client{client.New(baseUrl)}{{/customClientPackage}}
+	{{^customClientPackage}}return &Client{client.New(baseUrl, 1)}{{/customClientPackage}}
+}

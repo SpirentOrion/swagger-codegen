@@ -19,8 +19,8 @@ public class GoClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     protected String packageName = "swagger";
     protected String packageVersion = "1.0.0";
-    protected String apiDocPath = "docs/";
-    protected String modelDocPath = "docs/";
+    protected String apiDestPath = "client";
+    protected String modelDestPath = "xfer";
 
     public CodegenType getTag() {
         return CodegenType.CLIENT;
@@ -40,9 +40,6 @@ public class GoClientCodegen extends DefaultCodegen implements CodegenConfig {
         modelTemplateFiles.put("model.mustache", ".go");
         apiTemplateFiles.put("api.mustache", ".go");
 
-        modelDocTemplateFiles.put("model_doc.mustache", ".md");
-        apiDocTemplateFiles.put("api_doc.mustache", ".md");
-
         embeddedTemplateDir = templateDir = "go";
 
         setReservedWordsLowerCase(
@@ -55,7 +52,7 @@ public class GoClientCodegen extends DefaultCodegen implements CodegenConfig {
                 "break", "default", "func", "interface", "select",
                 "case", "defer", "go", "map", "struct",
                 "chan", "else", "goto", "package", "switch",
-                "const", "fallthrough", "if", "range", "type",
+                "const", "fallthrough", "if", "range",
                 "continue", "for", "import", "return", "var", "error", "ApiResponse")
                 // Added "error" as it's used so frequently that it may as well be a keyword
         );
@@ -149,22 +146,20 @@ public class GoClientCodegen extends DefaultCodegen implements CodegenConfig {
             setPackageVersion("1.0.0");
         }
 
+        if (additionalProperties.containsKey("apiDestPath")) {
+            apiDestPath = (String) additionalProperties.get("apiDestPath");
+        }
+        if (additionalProperties.containsKey("modelDestPath")) {
+            modelDestPath = (String) additionalProperties.get("modelDestPath");
+        }
+
         additionalProperties.put(CodegenConstants.PACKAGE_NAME, packageName);
         additionalProperties.put(CodegenConstants.PACKAGE_VERSION, packageVersion);
-        
-        additionalProperties.put("apiDocPath", apiDocPath);
-        additionalProperties.put("modelDocPath", modelDocPath);
 
         modelPackage = packageName;
         apiPackage = packageName;
 
-        supportingFiles.add(new SupportingFile("README.mustache", "", "README.md"));
-        supportingFiles.add(new SupportingFile("git_push.sh.mustache", "", "git_push.sh"));
-        supportingFiles.add(new SupportingFile("gitignore.mustache", "", ".gitignore"));
-        supportingFiles.add(new SupportingFile("configuration.mustache", "", "configuration.go"));
-        supportingFiles.add(new SupportingFile("api_client.mustache", "", "api_client.go"));
-        supportingFiles.add(new SupportingFile("api_response.mustache", "", "api_response.go"));
-        supportingFiles.add(new SupportingFile(".travis.yml", "", ".travis.yml"));
+        supportingFiles.add(new SupportingFile("client.mustache", apiDestPath + File.separator + packageName, "client.go"));
     }
 
     @Override
@@ -189,11 +184,11 @@ public class GoClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     @Override
     public String apiFileFolder() {
-        return outputFolder + File.separator;
+        return outputFolder + File.separator + apiDestPath + File.separator + packageName + File.separator;
     }
 
     public String modelFileFolder() {
-        return outputFolder + File.separator;
+        return outputFolder + File.separator + modelDestPath + File.separator + packageName + File.separator;
     }
 
     @Override
@@ -306,12 +301,12 @@ public class GoClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     @Override
     public String apiDocFileFolder() {
-        return (outputFolder + "/" + apiDocPath).replace('/', File.separatorChar);
+        return outputFolder;
     }
 
     @Override
     public String modelDocFileFolder() {
-        return (outputFolder + "/" + modelDocPath).replace('/', File.separatorChar);
+        return outputFolder;
     }
 
     @Override

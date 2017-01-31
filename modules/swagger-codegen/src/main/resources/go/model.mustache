@@ -1,15 +1,18 @@
-{{>partial_header}}
+// DO NOT EDIT: This code is auto-generated from the YAML schema. Any changes made to this file will be lost.
 package {{packageName}}
 {{#models}}{{#imports}}
 import ({{/imports}}{{#imports}}
 	"{{import}}"{{/imports}}{{#imports}}
+	"encoding/xml"
 )
 {{/imports}}{{#model}}{{#description}}
 // {{{description}}}{{/description}}
 type {{classname}} struct {
+	// Do not use: for marshalling to/from XML only
+	XMLName xml.Name `schema:"-" json:"-" xml:"{{classFilename}}" url:"-"`
 {{#vars}}{{#description}}
 	// {{{description}}}{{/description}}
-	{{name}} {{{datatype}}} `json:"{{baseName}},omitempty"`
+	{{name}} {{^required}}*{{/required}}{{{datatype}}} `json:"{{baseName}}{{^required}},omitempty{{/required}}"`
 {{/vars}}
 }
 {{/model}}{{/models}}
