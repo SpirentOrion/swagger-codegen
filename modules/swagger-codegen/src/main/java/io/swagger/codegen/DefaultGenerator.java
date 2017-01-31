@@ -554,22 +554,6 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
             }
         }
 
-        // Consider .swagger-codegen-ignore a supporting file
-        // Output .swagger-codegen-ignore if it doesn't exist and wasn't explicitly created by a generator
-        final String swaggerCodegenIgnore = ".swagger-codegen-ignore";
-        String ignoreFileNameTarget = config.outputFolder() + File.separator + swaggerCodegenIgnore;
-        File ignoreFile = new File(ignoreFileNameTarget);
-        if(!ignoreFile.exists()) {
-            String ignoreFileNameSource = File.separator + config.getCommonTemplateDir() + File.separator +  swaggerCodegenIgnore;
-            String ignoreFileContents = readResourceContents(ignoreFileNameSource);
-            try {
-                writeToFile(ignoreFileNameTarget, ignoreFileContents);
-            } catch (IOException e) {
-                throw new RuntimeException("Could not generate supporting file '" + swaggerCodegenIgnore + "'", e);
-            }
-            files.add(ignoreFile);
-        }
-
         /*
          * The following code adds default LICENSE (Apache-2.0) for all generators
          * To use license other than Apache2.0, update the following file:
