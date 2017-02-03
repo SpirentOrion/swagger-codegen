@@ -2208,6 +2208,13 @@ public class DefaultCodegen {
         op.isRestfulDestroy = op.isRestfulDestroy();
         op.isRestful = op.isRestful();
 
+        // set method boolean flags
+        op.operationIsPost = op.isPost();
+        op.operationIsGet = op.isGet();
+        op.operationIsPut = op.isPut();
+        op.operationIsDelete = op.isDelete();
+        op.operationIsPatch = op.isPatch();
+
         return op;
     }
 

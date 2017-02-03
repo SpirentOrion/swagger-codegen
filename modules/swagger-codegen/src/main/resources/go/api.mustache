@@ -11,16 +11,15 @@ import (
 )
 
 {{#operation}}
+{{#operationIsPut}}
 
-{{#hasBodyParam}}
-{{#hasPathParams}}
-{{! PUT operation }}
 /**
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
-{{#pathParams}} * @param {{paramName}} {{description}}
-{{/pathParams}} * @return *{{packageName}}.{{returnType}}
+{{#pathParams}} * {{paramName}}: {{description}}
+{{/pathParams}} * value: {{#bodyParam}}{{description}}{{/bodyParam}}
+ * returns *{{packageName}}.{{returnType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, error) {
 	var res {{packageName}}.{{returnType}}
@@ -32,16 +31,18 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
 	}
 	return &res, nil
 }
-{{/hasPathParams}}
-{{^hasPathParams}}
-{{#returnType}}
-{{#isListContainer}}
-{{! POST containing list return type}}
+
+{{/operationIsPut}}
+{{#operationIsPost}}
+	{{#returnType}}
+		{{#isListContainer}}
+
 /**
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
- * @return *[]{{packageName}}.{{returnBaseType}}
+ * value: {{#bodyParam}}{{description}}{{/bodyParam}}
+ * returns *[]{{packageName}}.{{returnBaseType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*[]{{packageName}}.{{returnBaseType}}, error) {
 	var res []{{packageName}}.{{returnBaseType}}
@@ -50,14 +51,16 @@ func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#b
 	}
 	return &res, nil
 }
-{{/isListContainer}}
-{{^isListContainer}}
-{{! POST containing single item return type}}
+
+		{{/isListContainer}}
+		{{^isListContainer}}
+			
 /**
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
- * @return *{{packageName}}.{{returnType}}
+ * value: {{#bodyParam}}{{description}}{{/bodyParam}}
+ * returns *{{packageName}}.{{returnType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, error) {
 	var res {{packageName}}.{{returnType}}
@@ -66,26 +69,32 @@ func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#b
 	}
 	return &res, nil
 }
-{{/isListContainer}}
-{{/returnType}}
-{{^returnType}}
-{{! POST without return type}}
+		
+		{{/isListContainer}}
+	{{/returnType}}
+	{{^returnType}}
+		
+/**
+ * {{notes}}
+ *
+ * ctx: Context containing meta-info for the request
+ * value: {{#bodyParam}}{{description}}{{/bodyParam}}	 
+ */
 func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) error {
 	_, err := c.Post(ctx, "{{contextPath}}{{path}}", value, nil)
 	return err
 }
-{{/returnType}}
-{{/hasPathParams}}
-{{/hasBodyParam}}
-{{^hasBodyParam}}
-{{#returnType}}
-{{#isListContainer}}
-{{! GET request to fetch list of resources}}
+
+	{{/returnType}}
+{{/operationIsPost}}
+{{#operationIsGet}}
+	{{#isListContainer}}
+		
 /**
  * {{notes}}
  *
- * ctx: Context containing meta-info for the request.
- * @return []{{packageName}}.{{returnBaseType}}
+ * ctx: Context containing meta-info for the request
+ * returns []{{packageName}}.{{returnBaseType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{returnBaseType}}, context.Context, error) {
 	var res []{{packageName}}.{{returnBaseType}}
@@ -95,15 +104,16 @@ func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{return
 	}
 	return res, ctx, nil
 }
-{{/isListContainer}}
-{{^isListContainer}}
-{{! GET request to fetch a single resource}}
+
+	{{/isListContainer}}
+	{{^isListContainer}}
+		
 /**
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
-{{#pathParams}} * @param {{paramName}} {{description}}
-{{/pathParams}} * @return *{{packageName}}.{{returnType}}
+{{#pathParams}} * {{paramName}}: {{description}}
+{{/pathParams}} * returns *{{packageName}}.{{returnType}}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{packageName}}.{{returnType}}, error) {
 	var res {{packageName}}.{{returnType}}
@@ -115,10 +125,11 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
 	}
 	return &res, nil
 }
-{{/isListContainer}}
-{{/returnType}}
-{{^returnType}}
-{{! DELETE resources}}
+
+	{{/isListContainer}}
+{{/operationIsGet}}
+{{#operationIsDelete}}
+
 /**
  * {{notes}}
  *
@@ -131,6 +142,6 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
 	_, err := c.Delete(ctx, localVarPath, nil, nil)
 	return err
 }
-{{/returnType}}
-{{/hasBodyParam}}
+
+{{/operationIsDelete}}
 {{/operation}}{{/operations}}

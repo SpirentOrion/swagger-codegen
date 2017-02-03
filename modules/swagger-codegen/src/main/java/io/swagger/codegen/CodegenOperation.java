@@ -17,6 +17,7 @@ public class CodegenOperation {
             isResponseBinary = false, isResponseFile = false, hasReference = false,
             isRestfulIndex, isRestfulShow, isRestfulCreate, isRestfulUpdate, isRestfulDestroy,
             isRestful;
+    public boolean operationIsPost, operationIsGet, operationIsPut, operationIsDelete, operationIsPatch;
     public String path, operationId, returnType, httpMethod, returnBaseType,
             returnContainer, summary, unescapedNotes, notes, baseName, defaultResponse, discriminator;
     public List<Map<String, String>> consumes, produces, prioritizedContentTypes;
@@ -143,6 +144,51 @@ public class CodegenOperation {
      */
     public boolean isRestfulDestroy() {
         return "DELETE".equals(httpMethod) && isMemberPath();
+    }
+
+    /**
+     * Check if operation is POST method
+     *
+     * @return true if if operation is POST method, false otherwise
+     */
+    public boolean isPost() {
+        return "POST".equals(httpMethod);
+    }
+
+    /**
+     * Check if operation is GET method
+     *
+     * @return true if if operation is GET method, false otherwise
+     */
+    public boolean isGet() {
+        return "GET".equals(httpMethod);
+    }
+
+    /**
+     * Check if operation is PUT method
+     *
+     * @return true if if operation is PUT method, false otherwise
+     */
+    public boolean isPut() {
+        return "PUT".equals(httpMethod);
+    }
+
+    /**
+     * Check if operation is DELETE method
+     *
+     * @return true if if operation is DELETE method, false otherwise
+     */
+    public boolean isDelete() {
+        return "DELETE".equals(httpMethod);
+    }
+
+    /**
+     * Check if operation is PATCH method
+     *
+     * @return true if if operation is PATCH method, false otherwise
+     */
+    public boolean isPatch() {
+        return "PATCH".equals(httpMethod);
     }
 
     /**
@@ -279,6 +325,16 @@ public class CodegenOperation {
             return false;
         if ( prioritizedContentTypes != null ? !prioritizedContentTypes.equals(that.prioritizedContentTypes) : that.prioritizedContentTypes != null )
             return false;
+        if (operationIsPost != that.operationIsPost)
+            return false;
+        if (operationIsGet != that.operationIsGet)
+            return false;
+        if (operationIsPut != that.operationIsPut)
+            return false;
+        if (operationIsDelete != that.operationIsDelete)
+            return false;
+        if (operationIsPatch != that.operationIsPatch)
+            return false;
         return operationIdLowerCase != null ? operationIdLowerCase.equals(that.operationIdLowerCase) : that.operationIdLowerCase == null;
 
     }
@@ -332,6 +388,11 @@ public class CodegenOperation {
         result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
         result = 31 * result + (prioritizedContentTypes != null ? prioritizedContentTypes.hashCode() : 0);
         result = 31 * result + (operationIdLowerCase != null ? operationIdLowerCase.hashCode() : 0);
+        result = 31 * result + (operationIsPost ? 13:31);
+        result = 31 * result + (operationIsGet ? 13:31);
+        result = 31 * result + (operationIsPut ? 13:31);
+        result = 31 * result + (operationIsDelete ? 13:31);
+        result = 31 * result + (operationIsPatch ? 13:31);
         return result;
     }
 }

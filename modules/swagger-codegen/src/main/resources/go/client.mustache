@@ -6,7 +6,7 @@ import (
 	"net/url"
 
     {{#customClientPackage}}client "{{customClientPackage}}"{{/customClientPackage}}
-	{{^customClientPackage}}"github.com/SpirentOrion/orion-api/common/client"{{/customClientPackage}}
+	{{^customClientPackage}}"github.com/SpirentOrion/orion-client/go/client"{{/customClientPackage}}
 )
 
 type Client struct {
@@ -15,5 +15,5 @@ type Client struct {
 
 func New(baseUrl *url.URL) *Client {
 	{{#customClientPackage}}return &Client{client.New(baseUrl)}{{/customClientPackage}}
-	{{^customClientPackage}}return &Client{client.New(baseUrl, 1)}{{/customClientPackage}}
+	{{^customClientPackage}}return &Client{client.New(baseUrl, {{#clientApiVersion}}{{clientApiVersion}}{{/clientApiVersion}}{{^clientApiVersion}}1{{/clientApiVersion}})}{{/customClientPackage}}
 }
