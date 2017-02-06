@@ -2081,6 +2081,7 @@ public class DefaultCodegen {
                         if (m != null) {
                             CodegenModel cmod = fromModel(op.returnBaseType, m, definitions);
                             op.discriminator = cmod.discriminator;
+                            op.returnTypeIsModel = true;
                         }
                     }
 

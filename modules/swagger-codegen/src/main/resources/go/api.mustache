@@ -19,10 +19,10 @@ import (
  * ctx: Context containing meta-info for the request.
 {{#pathParams}} * {{paramName}}: {{description}}
 {{/pathParams}} * value: {{#bodyParam}}{{description}}{{/bodyParam}}
- * returns *{{packageName}}.{{returnType}}
+ * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, error) {
-	var res {{packageName}}.{{returnType}}
+func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}, value *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, error) {
+	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 
@@ -60,10 +60,10 @@ func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#b
  *
  * ctx: Context containing meta-info for the request.
  * value: {{#bodyParam}}{{description}}{{/bodyParam}}
- * returns *{{packageName}}.{{returnType}}
+ * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, error) {
-	var res {{packageName}}.{{returnType}}
+func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, error) {
+	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
 	if _, err := c.Post(ctx, "{{contextPath}}{{path}}", value, &res); err != nil {
 		return nil, err
 	}
@@ -113,10 +113,10 @@ func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{return
  *
  * ctx: Context containing meta-info for the request.
 {{#pathParams}} * {{paramName}}: {{description}}
-{{/pathParams}} * returns *{{packageName}}.{{returnType}}
+{{/pathParams}} * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{packageName}}.{{returnType}}, error) {
-	var res {{packageName}}.{{returnType}}
+func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, error) {
+	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 

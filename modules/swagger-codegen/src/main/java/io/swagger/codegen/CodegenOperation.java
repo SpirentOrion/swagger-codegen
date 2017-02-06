@@ -17,6 +17,7 @@ public class CodegenOperation {
             isResponseBinary = false, isResponseFile = false, hasReference = false,
             isRestfulIndex, isRestfulShow, isRestfulCreate, isRestfulUpdate, isRestfulDestroy,
             isRestful;
+    public boolean returnTypeIsModel;
     public boolean operationIsPost, operationIsGet, operationIsPut, operationIsDelete, operationIsPatch;
     public String path, operationId, returnType, httpMethod, returnBaseType,
             returnContainer, summary, unescapedNotes, notes, baseName, defaultResponse, discriminator;
@@ -335,6 +336,8 @@ public class CodegenOperation {
             return false;
         if (operationIsPatch != that.operationIsPatch)
             return false;
+        if (returnTypeIsModel != that.returnTypeIsModel)
+            return false;
         return operationIdLowerCase != null ? operationIdLowerCase.equals(that.operationIdLowerCase) : that.operationIdLowerCase == null;
 
     }
@@ -393,6 +396,7 @@ public class CodegenOperation {
         result = 31 * result + (operationIsPut ? 13:31);
         result = 31 * result + (operationIsDelete ? 13:31);
         result = 31 * result + (operationIsPatch ? 13:31);
+        result = 31 * result + (returnTypeIsModel ? 13:31);
         return result;
     }
 }
