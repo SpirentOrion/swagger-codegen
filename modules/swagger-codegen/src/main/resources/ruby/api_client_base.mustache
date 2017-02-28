@@ -102,7 +102,7 @@ module {{moduleName}}
 
     def check_response_type(data, response, http)
       raise(
-        "Unexpected response type: \#{http.response}"
+        "Unexpected response type: #{http.response}"
       ) if data.class != response.class
     end
 
@@ -200,7 +200,7 @@ module {{moduleName}}
         else
           lrs += ' '
         end
-        lrs += "max=\#{list_range['Max']}"
+        lrs += "max=#{list_range['Max']}"
       end
       lrs += ';' if list_range['Descending'] || list_range['Max'] != 0
       request_options[:head]['Range'] = lrs
