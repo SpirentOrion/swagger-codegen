@@ -17,7 +17,7 @@ module {{moduleName}}
     {{#allParams}}{{^required}}  # @option opts [{{{dataType}}}] :{{paramName}} {{description}}{{#defaultValue}} (default to {{{.}}}){{/defaultValue}}
     {{/required}}{{/allParams}}  # @return [{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}nil{{/returnType}}]
       def {{operationId}}(context{{#allParams}}{{#required}}, {{paramName}}{{/required}}{{/allParams}})
-        local_var_path = '{{{path}}}'{{#pathParams}}.sub('{' + '{{baseName}}' + '}', {{paramName}}.to_s){{/pathParams}}
+        local_var_path = "{{{path}}}"{{#pathParams}}.sub('{' + '{{baseName}}' + '}', {{paramName}}.to_s){{/pathParams}}
         {{#returnType}}
           {{#isListContainer}}
         ret = []
