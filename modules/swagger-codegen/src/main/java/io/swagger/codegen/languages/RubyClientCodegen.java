@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 public class RubyClientCodegen extends DefaultCodegen implements CodegenConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(RubyClientCodegen.class);
     public static final String GEM_NAME = "gemName";
+    public static final String PACKAGE_NAME = "packageName";
     public static final String MODULE_NAME = "moduleName";
     public static final String GEM_VERSION = "gemVersion";
     public static final String GEM_LICENSE = "gemLicense";
@@ -39,6 +40,7 @@ public class RubyClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     protected String gemName;
     protected String moduleName;
+    protected String packageName;
     protected String gemVersion = "1.0.0";
     protected String specFolder = "spec";
     protected String libFolder = "lib";
@@ -63,15 +65,10 @@ public class RubyClientCodegen extends DefaultCodegen implements CodegenConfig {
 
         modelPackage = "models";
         apiPackage = "api";
+        packageName = "Api";
         outputFolder = "generated-code" + File.separator + "ruby";
-        modelTemplateFiles.put("model.mustache", ".rb");
         apiTemplateFiles.put("api.mustache", ".rb");
-        modelDocTemplateFiles.put("model_doc.mustache", ".md");
-        apiDocTemplateFiles.put("api_doc.mustache", ".md");
         embeddedTemplateDir = templateDir = "ruby";
-
-        modelTestTemplateFiles.put("model_test.mustache", ".rb");
-        apiTestTemplateFiles.put("api_test.mustache", ".rb");
 
         setReservedWordsLowerCase(
                 Arrays.asList(
@@ -163,7 +160,6 @@ public class RubyClientCodegen extends DefaultCodegen implements CodegenConfig {
 
         cliOptions.add(new CliOption(CodegenConstants.HIDE_GENERATION_TIMESTAMP, "hides the timestamp when files were generated").
                 defaultValue(Boolean.TRUE.toString()));
-
     }
 
     @Override
@@ -199,7 +195,7 @@ public class RubyClientCodegen extends DefaultCodegen implements CodegenConfig {
 
         if (additionalProperties.containsKey(GEM_VERSION)) {
             setGemVersion((String) additionalProperties.get(GEM_VERSION));
-        }else {
+        } else {
             // not set, pass the default value to template
             additionalProperties.put(GEM_VERSION, gemVersion);
         }
@@ -235,31 +231,17 @@ public class RubyClientCodegen extends DefaultCodegen implements CodegenConfig {
         // make api and model doc path available in mustache template
         additionalProperties.put("apiDocPath", apiDocPath);
         additionalProperties.put("modelDocPath", modelDocPath);
-
-        // use constant model/api package (folder path)
-        setModelPackage("models");
-        setApiPackage("api");
+        additionalProperties.put(PACKAGE_NAME, packageName);
 
         supportingFiles.add(new SupportingFile("gemspec.mustache", "", gemName + ".gemspec"));
         supportingFiles.add(new SupportingFile("gem.mustache", libFolder, gemName + ".rb"));
         String gemFolder = libFolder + File.separator + gemName;
-        supportingFiles.add(new SupportingFile("api_client.mustache", gemFolder, "api_client.rb"));
-        supportingFiles.add(new SupportingFile("api_error.mustache", gemFolder, "api_error.rb"));
-        supportingFiles.add(new SupportingFile("configuration.mustache", gemFolder, "configuration.rb"));
-        supportingFiles.add(new SupportingFile("version.mustache", gemFolder, "version.rb"));
-        supportingFiles.add(new SupportingFile("README.mustache", "", "README.md"));
-        supportingFiles.add(new SupportingFile("git_push.sh.mustache", "", "git_push.sh"));
-        supportingFiles.add(new SupportingFile("gitignore.mustache", "", ".gitignore"));
-        supportingFiles.add(new SupportingFile("Rakefile.mustache", "", "Rakefile"));
-        supportingFiles.add(new SupportingFile("Gemfile.mustache", "", "Gemfile"));
+        String apiFileFolder = gemFolder + File.separator + apiPackage.replace("/", File.separator);
+        supportingFiles.add(new SupportingFile("api_client_base.mustache", apiFileFolder, "client_base.rb"));
+        supportingFiles.add(new SupportingFile("api_client.mustache", apiFileFolder, "client.rb"));
 
-        // test files should not be overwritten
-        writeOptional(outputFolder, new SupportingFile("rspec.mustache", "", ".rspec"));
-        writeOptional(outputFolder, new SupportingFile("spec_helper.mustache", specFolder, "spec_helper.rb"));
-        writeOptional(outputFolder, new SupportingFile("configuration_spec.mustache", specFolder, "configuration_spec.rb"));
-        writeOptional(outputFolder, new SupportingFile("api_client_spec.mustache", specFolder, "api_client_spec.rb"));
-        // not including base object test as the moment as not all API has model
-        //writeOptional(outputFolder, new SupportingFile("base_object_spec.mustache", specFolder, "base_object_spec.rb"));
+        supportingFiles.add(new SupportingFile("version.mustache", gemFolder, "version.rb"));
+        supportingFiles.add(new SupportingFile("Gemfile.mustache", "", "Gemfile"));
     }
 
     @Override
@@ -632,6 +614,12 @@ public class RubyClientCodegen extends DefaultCodegen implements CodegenConfig {
         }
 
         return underscore(sanitizeName(operationId));
+    }
+
+    @Override
+    public void setApiPackage(String apiPackage) {
+        this.apiPackage = apiPackage.toLowerCase();
+        this.packageName = apiPackage;
     }
 
     @Override
