@@ -1,0 +1,210 @@
+=begin
+{{> api_info}}
+=end
+
+require 'json'
+
+module {{moduleName}}
+  # mixin for response
+  module ResponseInfo
+    def self.included(_base)
+      attr_accessor :_resolved
+      attr_accessor :defer
+      attr_accessor :error_detail
+    end
+
+    def error?
+      !error_detail.nil?
+    end
+  end
+
+  # client to perform RESTful APIs
+  module ClientBase
+    def initialize(base_url, api_version, proxy_settings = nil)
+      @base_url = base_url
+      @api_version = api_version.to_s
+      @proxy_settings = proxy_settings
+    end
+
+    def create_request(path, connection_options = {})
+      connection_options[:proxy] = @proxy_settings unless @proxy_settings.nil?
+      EventMachine::HttpRequest.new(@base_url + path, connection_options)
+    end
+
+    def get(context, req_path, response, req_body = nil, list_range = nil)
+      request_options = build_request_options(context,
+                                              req_body,
+                                              list_range)
+      http = create_request(req_path).get(request_options)
+      handle_callback(http, response)
+      http
+    end
+
+    def post(context, req_path, response, req_body = nil)
+      request_options = build_request_options(context,
+                                              req_body)
+      http = create_request(req_path).post(request_options)
+      handle_callback(http, response)
+      http
+    end
+
+    def put(context, req_path, response, req_body = nil)
+      request_options = build_request_options(context,
+                                              req_body)
+      http = create_request(req_path).put(request_options)
+      handle_callback(http, response)
+      http
+    end
+
+    def delete(context, req_path, response, req_body = nil)
+      request_options = build_request_options(context,
+                                              req_body)
+      http = create_request(req_path).delete(request_options)
+      handle_callback(http, response)
+      http
+    end
+
+    private
+
+    def handle_successful(http, response)
+      http.callback do
+        parse_response(http, response)
+      end
+    end
+
+    def handle_error(http, response)
+      http.errback do
+        response.error_detail = http.error
+      end
+    end
+
+    def handle_callback(http, response)
+      class << response
+        include ResponseInfo
+      end
+      response._resolved = false
+      response.defer = http
+      handle_successful(http, response)
+      handle_error(http, response)
+    end
+
+    def apply_array(data, response)
+      data.each do |v|
+        response << v
+      end
+    end
+
+    def apply_hash(data, response)
+      data.each do |k, v|
+        response[k] = v
+      end
+    end
+
+    def check_response_type(data, response, http)
+      raise(
+        "Unexpected response type: \#{http.response}"
+      ) if data.class != response.class
+    end
+
+    def parse_normal(http, response)
+      return if http.response.nil? || http.response == '' || http.response == '""'
+      data = JSON.parse http.response
+      check_response_type(data, response, http)
+      if response.is_a?(Array)
+        apply_array(data, response)
+      elsif response.is_a?(Hash)
+        apply_hash(data, response)
+      end
+    end
+
+    def apply_error_data(data, response)
+      response.error_detail[:code] = data['code']
+      response.error_detail[:message] = data['message']
+      response.error_detail[:stack] = data['stack']
+      response.error_detail[:raw] = data
+    end
+
+    def parse_error_body(http, response)
+      data = JSON.parse http.response
+      apply_error_data(data, response)
+    rescue
+      response.error_detail[:raw] = http.response
+    end
+
+    def parse_error(http, response)
+      response.error_detail = {
+        status_code: http.response_header.status,
+        status: http.response_header.http_reason,
+        header: http.response_header
+      }
+      parse_error_body(http, response)
+    end
+
+    def parse_response(http, response)
+      status_cat = http.response_header.status.to_i / 100
+      if status_cat == 4 || status_cat == 5
+        parse_error(http, response)
+      else
+        parse_normal(http, response)
+      end
+    end
+
+    def build_request_options(context,
+                              req_body = nil,
+                              list_range = nil)
+      request_options = {
+        head: {}
+      }
+      configure_default_headers(request_options)
+      handle_request_body(req_body, request_options)
+      handle_context(context, request_options)
+      handle_list_range(list_range, request_options)
+      request_options
+    end
+
+    def configure_default_headers(request_options)
+      request_options[:head]['Accept'] = 'application/json'
+      request_options[:head]['X-Spirent-Api-Version'] = @api_version
+    end
+
+    def handle_request_body(req_body, request_options)
+      return if req_body.nil?
+      begin
+        request_options[:body] = JSON.generate req_body
+        request_options[:head]['Content-Type'] = 'application/json'
+      rescue
+        raise 'invalid request body: not in JSON format'
+      end
+    end
+
+    def handle_context(context, request_options)
+      request_options[:head]['Authorization'] = (
+        'Bearer ' + context[:token]
+      ) unless context[:token].nil?
+      request_options[:head]
+        .merge!(
+          context[:additional_headers]
+        ) unless context[:additional_headers].nil?
+    end
+
+    def handle_list_range(list_range, request_options)
+      return if list_range.nil?
+      lrs = (
+        list_range['Field'] + ' '
+      ) if list_range['Field'] != ''
+      lrs += list_range['FirstId'] + '..' + list_range['LastId'] + ';'
+      lrs += ' order=desc' if list_range['Descending']
+      if list_range['Max'] != 0
+        if list_range['Descending']
+          lrs += ','
+        else
+          lrs += ' '
+        end
+        lrs += "max=\#{list_range['Max']}"
+      end
+      lrs += ';' if list_range['Descending'] || list_range['Max'] != 0
+      request_options[:head]['Range'] = lrs
+    end
+  end
+
+end

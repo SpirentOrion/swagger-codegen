@@ -19,7 +19,7 @@ public class CodegenOperation {
             isRestful;
     public boolean returnTypeIsModel;
     public boolean operationIsPost, operationIsGet, operationIsPut, operationIsDelete, operationIsPatch;
-    public String path, operationId, returnType, httpMethod, returnBaseType,
+    public String path, operationId, returnType, httpMethod, httpMethodLowerCase, returnBaseType,
             returnContainer, summary, unescapedNotes, notes, baseName, defaultResponse, discriminator;
     public List<Map<String, String>> consumes, produces, prioritizedContentTypes;
     public CodegenParameter bodyParam;
@@ -274,6 +274,8 @@ public class CodegenOperation {
             return false;
         if (httpMethod != null ? !httpMethod.equals(that.httpMethod) : that.httpMethod != null)
             return false;
+        if (httpMethodLowerCase != null ? !httpMethodLowerCase.equals(that.httpMethodLowerCase) : that.httpMethodLowerCase != null)
+            return false;
         if (returnBaseType != null ? !returnBaseType.equals(that.returnBaseType) : that.returnBaseType != null)
             return false;
         if (returnContainer != null ? !returnContainer.equals(that.returnContainer) : that.returnContainer != null)
@@ -364,6 +366,7 @@ public class CodegenOperation {
         result = 31 * result + (operationId != null ? operationId.hashCode() : 0);
         result = 31 * result + (returnType != null ? returnType.hashCode() : 0);
         result = 31 * result + (httpMethod != null ? httpMethod.hashCode() : 0);
+        result = 31 * result + (httpMethodLowerCase != null ? httpMethodLowerCase.hashCode() : 0);
         result = 31 * result + (returnBaseType != null ? returnBaseType.hashCode() : 0);
         result = 31 * result + (returnContainer != null ? returnContainer.hashCode() : 0);
         result = 31 * result + (summary != null ? summary.hashCode() : 0);
