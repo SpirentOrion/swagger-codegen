@@ -88,35 +88,16 @@ func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{pack
 	{{/returnType}}
 {{/operationIsPost}}
 {{#operationIsGet}}
-	{{#isListContainer}}
-		
-/**
- * {{notes}}
- *
- * ctx: Context containing meta-info for the request
- * returns []{{packageName}}.{{returnBaseType}}
- */
-func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{returnBaseType}}, context.Context, error) {
-	var res []{{packageName}}.{{returnBaseType}}
-	ctx, err := c.Get(ctx, "{{contextPath}}{{path}}", nil, &res)
-	if err != nil {
-		return nil, ctx, err
-	}
-	return res, ctx, nil
-}
 
-	{{/isListContainer}}
-	{{^isListContainer}}
-		
 /**
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
 {{#pathParams}} * {{paramName}}: {{description}}
-{{/pathParams}} * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
+{{/pathParams}} * returns *{{#isListContainer}}[]{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, error) {
-	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
+func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{#isListContainer}}[]{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}, error) {
+	var res {{#isListContainer}}[]{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 
@@ -126,7 +107,6 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
 	return &res, nil
 }
 
-	{{/isListContainer}}
 {{/operationIsGet}}
 {{#operationIsDelete}}
 
