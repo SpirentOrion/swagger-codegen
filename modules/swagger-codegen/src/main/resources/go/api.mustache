@@ -41,12 +41,12 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
- * value: {{#bodyParam}}{{description}}{{/bodyParam}}
+ * {{#bodyParam}}value: {{description}}{{/bodyParam}}
  * returns *[]{{packageName}}.{{returnBaseType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*[]{{packageName}}.{{returnBaseType}}, error) {
+func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*[]{{packageName}}.{{returnBaseType}}, error) {
 	var res []{{packageName}}.{{returnBaseType}}
-	if _, err := c.Post(ctx, "{{contextPath}}{{path}}", value, &res); err != nil {
+	if _, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -59,12 +59,12 @@ func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#b
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
- * value: {{#bodyParam}}{{description}}{{/bodyParam}}
+ * {{#bodyParam}}value: {{description}}{{/bodyParam}}
  * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, error) {
+func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, error) {
 	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
-	if _, err := c.Post(ctx, "{{contextPath}}{{path}}", value, &res); err != nil {
+	if _, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -78,10 +78,10 @@ func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#b
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request
- * value: {{#bodyParam}}{{description}}{{/bodyParam}}	 
+ * {{#bodyParam}}value: {{description}}{{/bodyParam}}	 
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, value *{{packageName}}.{{#bodyParam}}{{dataType}}{{/bodyParam}}) error {
-	_, err := c.Post(ctx, "{{contextPath}}{{path}}", value, nil)
+func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) error {
+	_, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, nil)
 	return err
 }
 
