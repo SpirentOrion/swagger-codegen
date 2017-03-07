@@ -2121,6 +2121,10 @@ public class DefaultCodegen {
         if (parameters != null) {
             for (Parameter param : parameters) {
                 CodegenParameter p = fromParameter(param, imports);
+
+                if (definitions != null && definitions.containsKey(p.baseType)) {
+                    p.typeIsModel = true;
+                }
                 // rename parameters to make sure all of them have unique names
                 if (ensureUniqueParams) {
                     while (true) {

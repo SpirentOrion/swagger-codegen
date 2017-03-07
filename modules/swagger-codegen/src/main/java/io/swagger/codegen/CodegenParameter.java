@@ -22,6 +22,7 @@ public class CodegenParameter {
     public CodegenProperty items;
     public Map<String, Object> vendorExtensions;
     public boolean hasValidation;
+    public boolean typeIsModel;
 
     /**
      * Determines whether this parameter is mandatory. If the parameter is in "path",
@@ -140,6 +141,7 @@ public class CodegenParameter {
         output.isDateTime = this.isDateTime;
         output.isListContainer = this.isListContainer;
         output.isMapContainer = this.isMapContainer;
+        output.typeIsModel = this.typeIsModel;
 
         return output;
     }
@@ -265,6 +267,8 @@ public class CodegenParameter {
             return false;
         if (uniqueItems != that.uniqueItems)
             return false;
+        if (typeIsModel != that.typeIsModel)
+            return false;
         return multipleOf != null ? multipleOf.equals(that.multipleOf) : that.multipleOf == null;
 
     }
@@ -326,6 +330,7 @@ public class CodegenParameter {
         result = 31 * result + (maxItems != null ? maxItems.hashCode() : 0);
         result = 31 * result + (minItems != null ? minItems.hashCode() : 0);
         result = 31 * result + (uniqueItems ? 13:31);
+        result = 31 * result + (typeIsModel ? 13:31);
         result = 31 * result + (multipleOf != null ? multipleOf.hashCode() : 0);
         return result;
     }
