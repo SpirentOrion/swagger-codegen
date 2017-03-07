@@ -11,144 +11,27 @@ import (
 )
 
 {{#operation}}
-{{#operationIsPut}}
 
 /**
  * {{notes}}
  *
  * ctx: Context containing meta-info for the request.
 {{#pathParams}} * {{paramName}}: {{description}}
-{{/pathParams}} * value: {{#bodyParam}}{{description}}{{/bodyParam}}
- * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
+{{/pathParams}}
+{{#bodyParam}} * value: {{description}}
+{{/bodyParam}}
+{{#returnType}} * returns {{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}
+{{/returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}, value *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, context.Context, error) {
-	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
-	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
-	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
+func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) ({{#returnType}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}, {{/returnType}}context.Context, error) {
+	{{#returnType}}var res {{#isListContainer}}[]{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}
+	{{/returnType}}path := "{{contextPath}}{{path}}"{{#pathParams}}
+	path = strings.Replace(path, "{"+"{{baseName}}"+"}", {{paramName}}, -1){{/pathParams}}
 
-	ctxResp, err := c.Put(ctx, localVarPath, value, &res)
+	ctxResp, err := c.{{#operationIsPost}}Post{{/operationIsPost}}{{#operationIsGet}}Get{{/operationIsGet}}{{#operationIsPut}}Put{{/operationIsPut}}{{#operationIsDelete}}Delete{{/operationIsDelete}}(ctx, path, {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, {{#returnType}}&res{{/returnType}}{{^returnType}}nil{{/returnType}})
 	if err != nil {
-		return nil, ctxResp, err
+		return {{#returnType}}nil, {{/returnType}}ctxResp, err
 	}
-	return &res, ctxResp, nil
+	return {{#returnType}}&res, {{/returnType}}ctxResp, nil
 }
-
-{{/operationIsPut}}
-{{#operationIsPost}}
-	{{#returnType}}
-		{{#isListContainer}}
-
-/**
- * {{notes}}
- *
- * ctx: Context containing meta-info for the request.
- * {{#bodyParam}}value: {{description}}{{/bodyParam}}
- * returns *[]{{packageName}}.{{returnBaseType}}
- */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*[]{{packageName}}.{{returnBaseType}}, context.Context, error) {
-	var res []{{packageName}}.{{returnBaseType}}
-
-	ctxResp, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res)
-	if err != nil {
-		return nil, ctxResp, err
-	}
-	return &res, ctxResp, nil
-}
-
-		{{/isListContainer}}
-		{{^isListContainer}}
-			
-/**
- * {{notes}}
- *
- * ctx: Context containing meta-info for the request.
- * {{#bodyParam}}value: {{description}}{{/bodyParam}}
- * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
- */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, context.Context, error) {
-	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
-
-	ctxResp, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res)
-	if err != nil {
-		return nil, ctxResp, err
-	}
-	return &res, ctxResp, nil
-}
-		
-		{{/isListContainer}}
-	{{/returnType}}
-	{{^returnType}}
-		
-/**
- * {{notes}}
- *
- * ctx: Context containing meta-info for the request
- * {{#bodyParam}}value: {{description}}{{/bodyParam}}	 
- */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (context.Context, error) {
-	ctxResp, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, nil)
-	return ctxResp, err
-}
-
-	{{/returnType}}
-{{/operationIsPost}}
-{{#operationIsGet}}
-	{{#isListContainer}}
-		
-/**
- * {{notes}}
- *
- * ctx: Context containing meta-info for the request
- * returns []{{packageName}}.{{returnBaseTypeInitialCaps}}
- */
-func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{returnBaseTypeInitialCaps}}, context.Context, error) {
-	var res []{{packageName}}.{{returnBaseTypeInitialCaps}}
-
-	ctxResp, err := c.Get(ctx, "{{contextPath}}{{path}}", nil, &res)
-	if err != nil {
-		return nil, ctxResp, err
-	}
-	return res, ctxResp, nil
-}
-
-	{{/isListContainer}}
-	{{^isListContainer}}
-		
-/**
- * {{notes}}
- *
- * ctx: Context containing meta-info for the request.
-{{#pathParams}} * {{paramName}}: {{description}}
-{{/pathParams}} * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
- */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, context.Context, error) {
-	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
-	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
-	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
-
-	ctxResp, err := c.Get(ctx, localVarPath, nil, &res)
-	if err != nil {
-		return nil, ctxResp, err
-	}
-	return &res, ctxResp, nil
-}
-
-	{{/isListContainer}}
-{{/operationIsGet}}
-{{#operationIsDelete}}
-
-/**
- * {{notes}}
- *
- * ctx: Context containing meta-info for the request.
- */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (context.Context, error) {
-	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
-	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
-
-	ctxResp, err := c.Delete(ctx, localVarPath, nil, nil)
-	return ctxResp, err
-}
-
-{{/operationIsDelete}}
 {{/operation}}{{/operations}}
