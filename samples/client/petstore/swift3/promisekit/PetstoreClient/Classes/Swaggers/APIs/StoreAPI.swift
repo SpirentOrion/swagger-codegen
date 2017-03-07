@@ -58,6 +58,7 @@ open class StoreAPI: APIBase {
 
         let url = NSURLComponents(string: URLString)
 
+
         let requestBuilder: RequestBuilder<Void>.Type = PetstoreClientAPI.requestBuilderFactory.getBuilder()
 
         return requestBuilder.init(method: "DELETE", URLString: (url?.string ?? URLString), parameters: parameters, isBody: false)
@@ -99,7 +100,7 @@ open class StoreAPI: APIBase {
        - type: apiKey api_key 
        - name: api_key
      - examples: [{contentType=application/json, example={
-  "key" : 123
+  "key" : 7
 }}]
 
      - returns: RequestBuilder<[String:Int32]> 
@@ -110,6 +111,7 @@ open class StoreAPI: APIBase {
         let parameters: [String:Any]? = nil
 
         let url = NSURLComponents(string: URLString)
+
 
         let requestBuilder: RequestBuilder<[String:Int32]>.Type = PetstoreClientAPI.requestBuilderFactory.getBuilder()
 
@@ -151,34 +153,34 @@ open class StoreAPI: APIBase {
      - GET /store/order/{orderId}
      - For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions
      - examples: [{contentType=application/xml, example=<Order>
-  <id>123456</id>
-  <petId>123456</petId>
-  <quantity>0</quantity>
+  <id>123456789</id>
+  <petId>123456789</petId>
+  <quantity>123</quantity>
   <shipDate>2000-01-23T04:56:07.000Z</shipDate>
-  <status>string</status>
+  <status>aeiou</status>
   <complete>true</complete>
 </Order>}, {contentType=application/json, example={
-  "petId" : 123456789,
-  "quantity" : 123,
-  "id" : 123456789,
+  "petId" : 2,
+  "quantity" : 9,
+  "id" : 4,
   "shipDate" : "2000-01-23T04:56:07.000+00:00",
-  "complete" : true,
-  "status" : "aeiou"
+  "complete" : false,
+  "status" : "placed"
 }}]
      - examples: [{contentType=application/xml, example=<Order>
-  <id>123456</id>
-  <petId>123456</petId>
-  <quantity>0</quantity>
+  <id>123456789</id>
+  <petId>123456789</petId>
+  <quantity>123</quantity>
   <shipDate>2000-01-23T04:56:07.000Z</shipDate>
-  <status>string</status>
+  <status>aeiou</status>
   <complete>true</complete>
 </Order>}, {contentType=application/json, example={
-  "petId" : 123456789,
-  "quantity" : 123,
-  "id" : 123456789,
+  "petId" : 2,
+  "quantity" : 9,
+  "id" : 4,
   "shipDate" : "2000-01-23T04:56:07.000+00:00",
-  "complete" : true,
-  "status" : "aeiou"
+  "complete" : false,
+  "status" : "placed"
 }}]
      
      - parameter orderId: (path) ID of pet that needs to be fetched 
@@ -192,6 +194,7 @@ open class StoreAPI: APIBase {
         let parameters: [String:Any]? = nil
 
         let url = NSURLComponents(string: URLString)
+
 
         let requestBuilder: RequestBuilder<Order>.Type = PetstoreClientAPI.requestBuilderFactory.getBuilder()
 
@@ -233,34 +236,34 @@ open class StoreAPI: APIBase {
      - POST /store/order
      - 
      - examples: [{contentType=application/xml, example=<Order>
-  <id>123456</id>
-  <petId>123456</petId>
-  <quantity>0</quantity>
+  <id>123456789</id>
+  <petId>123456789</petId>
+  <quantity>123</quantity>
   <shipDate>2000-01-23T04:56:07.000Z</shipDate>
-  <status>string</status>
+  <status>aeiou</status>
   <complete>true</complete>
 </Order>}, {contentType=application/json, example={
-  "petId" : 123456789,
-  "quantity" : 123,
-  "id" : 123456789,
+  "petId" : 8,
+  "quantity" : 2,
+  "id" : 0,
   "shipDate" : "2000-01-23T04:56:07.000+00:00",
-  "complete" : true,
-  "status" : "aeiou"
+  "complete" : false,
+  "status" : "placed"
 }}]
      - examples: [{contentType=application/xml, example=<Order>
-  <id>123456</id>
-  <petId>123456</petId>
-  <quantity>0</quantity>
+  <id>123456789</id>
+  <petId>123456789</petId>
+  <quantity>123</quantity>
   <shipDate>2000-01-23T04:56:07.000Z</shipDate>
-  <status>string</status>
+  <status>aeiou</status>
   <complete>true</complete>
 </Order>}, {contentType=application/json, example={
-  "petId" : 123456789,
-  "quantity" : 123,
-  "id" : 123456789,
+  "petId" : 8,
+  "quantity" : 2,
+  "id" : 0,
   "shipDate" : "2000-01-23T04:56:07.000+00:00",
-  "complete" : true,
-  "status" : "aeiou"
+  "complete" : false,
+  "status" : "placed"
 }}]
      
      - parameter body: (body) order placed for purchasing the pet 
@@ -273,6 +276,7 @@ open class StoreAPI: APIBase {
         let parameters = body.encodeToJSON() as? [String:AnyObject]
 
         let url = NSURLComponents(string: URLString)
+
 
         let requestBuilder: RequestBuilder<Order>.Type = PetstoreClientAPI.requestBuilderFactory.getBuilder()
 
