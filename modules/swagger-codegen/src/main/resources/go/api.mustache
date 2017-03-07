@@ -26,10 +26,11 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 
-	if ctx, err := c.Put(ctx, localVarPath, value, &res); err != nil {
-		return nil, ctx, err
+	ctxResp, err := c.Put(ctx, localVarPath, value, &res)
+	if err != nil {
+		return nil, ctxResp, err
 	}
-	return &res, ctx, nil
+	return &res, ctxResp, nil
 }
 
 {{/operationIsPut}}
@@ -46,10 +47,12 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
  */
 func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*[]{{packageName}}.{{returnBaseType}}, context.Context, error) {
 	var res []{{packageName}}.{{returnBaseType}}
-	if ctx, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res); err != nil {
-		return nil, ctx, err
+
+	ctxResp, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res)
+	if err != nil {
+		return nil, ctxResp, err
 	}
-	return &res, ctx, nil
+	return &res, ctxResp, nil
 }
 
 		{{/isListContainer}}
@@ -64,10 +67,12 @@ func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{pack
  */
 func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, context.Context, error) {
 	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
-	if ctx, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res); err != nil {
-		return nil, ctx, err
+
+	ctxResp, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res)
+	if err != nil {
+		return nil, ctxResp, err
 	}
-	return &res, ctx, nil
+	return &res, ctxResp, nil
 }
 		
 		{{/isListContainer}}
@@ -81,8 +86,8 @@ func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{pack
  * {{#bodyParam}}value: {{description}}{{/bodyParam}}	 
  */
 func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (context.Context, error) {
-	ctx, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, nil)
-	return ctx, err
+	ctxResp, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, nil)
+	return ctxResp, err
 }
 
 	{{/returnType}}
@@ -98,11 +103,12 @@ func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{pack
  */
 func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{returnBaseTypeInitialCaps}}, context.Context, error) {
 	var res []{{packageName}}.{{returnBaseTypeInitialCaps}}
-	ctx, err := c.Get(ctx, "{{contextPath}}{{path}}", nil, &res)
+
+	ctxResp, err := c.Get(ctx, "{{contextPath}}{{path}}", nil, &res)
 	if err != nil {
-		return nil, ctx, err
+		return nil, ctxResp, err
 	}
-	return res, ctx, nil
+	return res, ctxResp, nil
 }
 
 	{{/isListContainer}}
@@ -120,10 +126,11 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 
-	if ctx, err := c.Get(ctx, localVarPath, nil, &res); err != nil {
-		return nil, ctx, err
+	ctxResp, err := c.Get(ctx, localVarPath, nil, &res)
+	if err != nil {
+		return nil, ctxResp, err
 	}
-	return &res, ctx, nil
+	return &res, ctxResp, nil
 }
 
 	{{/isListContainer}}
@@ -139,8 +146,8 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 
-	ctx, err := c.Delete(ctx, localVarPath, nil, nil)
-	return ctx, err
+	ctxResp, err := c.Delete(ctx, localVarPath, nil, nil)
+	return ctxResp, err
 }
 
 {{/operationIsDelete}}
