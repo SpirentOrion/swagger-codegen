@@ -21,15 +21,15 @@ import (
 {{/pathParams}} * value: {{#bodyParam}}{{description}}{{/bodyParam}}
  * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}, value *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, error) {
+func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}, value *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{#bodyParam}}{{dataType}}{{/bodyParam}}) (*{{packageName}}.{{returnType}}, context.Context, error) {
 	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 
-	if _, err := c.Put(ctx, localVarPath, value, &res); err != nil {
-		return nil, err
+	if ctx, err := c.Put(ctx, localVarPath, value, &res); err != nil {
+		return nil, ctx, err
 	}
-	return &res, nil
+	return &res, ctx, nil
 }
 
 {{/operationIsPut}}
@@ -44,12 +44,12 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
  * {{#bodyParam}}value: {{description}}{{/bodyParam}}
  * returns *[]{{packageName}}.{{returnBaseType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*[]{{packageName}}.{{returnBaseType}}, error) {
+func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*[]{{packageName}}.{{returnBaseType}}, context.Context, error) {
 	var res []{{packageName}}.{{returnBaseType}}
-	if _, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res); err != nil {
-		return nil, err
+	if ctx, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res); err != nil {
+		return nil, ctx, err
 	}
-	return &res, nil
+	return &res, ctx, nil
 }
 
 		{{/isListContainer}}
@@ -62,12 +62,12 @@ func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{pack
  * {{#bodyParam}}value: {{description}}{{/bodyParam}}
  * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, error) {
+func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, context.Context, error) {
 	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
-	if _, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res); err != nil {
-		return nil, err
+	if ctx, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, &res); err != nil {
+		return nil, ctx, err
 	}
-	return &res, nil
+	return &res, ctx, nil
 }
 		
 		{{/isListContainer}}
@@ -80,9 +80,9 @@ func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{pack
  * ctx: Context containing meta-info for the request
  * {{#bodyParam}}value: {{description}}{{/bodyParam}}	 
  */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) error {
-	_, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, nil)
-	return err
+func (c *Client) {{{nickname}}}(ctx context.Context{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) (context.Context, error) {
+	ctx, err := c.Post(ctx, "{{contextPath}}{{path}}", {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, nil)
+	return ctx, err
 }
 
 	{{/returnType}}
@@ -115,15 +115,15 @@ func (c *Client) {{{nickname}}}(ctx context.Context) ([]{{packageName}}.{{return
 {{#pathParams}} * {{paramName}}: {{description}}
 {{/pathParams}} * returns *{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, error) {
+func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (*{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}, context.Context, error) {
 	var res {{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnType}}
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 
-	if _, err := c.Get(ctx, localVarPath, nil, &res); err != nil {
-		return nil, err
+	if ctx, err := c.Get(ctx, localVarPath, nil, &res); err != nil {
+		return nil, ctx, err
 	}
-	return &res, nil
+	return &res, ctx, nil
 }
 
 	{{/isListContainer}}
@@ -135,12 +135,12 @@ func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}
  *
  * ctx: Context containing meta-info for the request.
  */
-func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) error {
+func (c *Client) {{{nickname}}}(ctx context.Context, {{#pathParams}}{{paramName}} string{{/pathParams}}) (context.Context, error) {
 	localVarPath := "{{contextPath}}{{path}}"{{#pathParams}}
 	localVarPath = strings.Replace(localVarPath, "{"+"{{baseName}}"+"}", fmt.Sprintf("%v", {{paramName}}), -1){{/pathParams}}
 
-	_, err := c.Delete(ctx, localVarPath, nil, nil)
-	return err
+	ctx, err := c.Delete(ctx, localVarPath, nil, nil)
+	return ctx, err
 }
 
 {{/operationIsDelete}}
