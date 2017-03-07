@@ -32,6 +32,6 @@ func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}
 	if err != nil {
 		return {{#returnType}}nil, {{/returnType}}ctxResp, err
 	}
-	return {{#returnType}}&res, {{/returnType}}ctxResp, nil
+	return {{#returnType}}{{^isListContainer}}&{{/isListContainer}}res, {{/returnType}}ctxResp, nil
 }
 {{/operation}}{{/operations}}
