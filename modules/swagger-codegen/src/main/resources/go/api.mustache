@@ -20,11 +20,11 @@ import (
 {{/pathParams}}
 {{#bodyParam}} * value: {{description}}
 {{/bodyParam}}
-{{#returnType}} * returns {{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}
+{{#returnType}} * returns {{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}
 {{/returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) ({{#returnType}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}, {{/returnType}}context.Context, error) {
-	{{#returnType}}var res {{#isListContainer}}[]{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseTypeInitialCaps}}
+func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#bodyParam}}, value *{{packageName}}.{{dataType}}{{/bodyParam}}) ({{#returnType}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}, {{/returnType}}context.Context, error) {
+	{{#returnType}}var res {{#isListContainer}}[]{{/isListContainer}}{{#returnTypeIsModel}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}
 	{{/returnType}}path := "{{contextPath}}{{path}}"{{#pathParams}}
 	path = strings.Replace(path, "{"+"{{baseName}}"+"}", {{paramName}}, -1){{/pathParams}}
 
