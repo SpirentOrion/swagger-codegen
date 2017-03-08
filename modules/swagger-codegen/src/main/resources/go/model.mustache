@@ -13,7 +13,7 @@ type {{classname}} struct {
 	XMLName xml.Name `schema:"-" json:"-" xml:"{{classFilename}}" url:"-"`
 {{#vars}}{{#description}}
 	// {{{description}}}{{/description}}
-	{{name}} {{^required}}*{{/required}}{{{datatype}}} `json:"{{baseName}}{{^required}},omitempty{{/required}}"`
+	{{name}} {{^required}}*{{/required}}{{{datatype}}} `schema:"{{baseName}}" json:"{{baseName}}{{^required}},omitempty{{/required}}" xml:"{{baseName}}" url:"{{baseName}},omitempty"`
 {{/vars}}
 }
 {{/model}}{{/models}}
