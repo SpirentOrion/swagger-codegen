@@ -23,12 +23,12 @@ import (
 {{#returnType}} * returns {{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}
 {{/returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#bodyParam}}, value {{#typeIsModel}}*{{packageName}}.{{/typeIsModel}}{{dataType}}{{/bodyParam}}) ({{#returnType}}{{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}, {{/returnType}}context.Context, error) {
+func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#bodyParam}}, value {{#typeIsModel}}*{{packageName}}.{{/typeIsModel}}{{dataType}}{{/bodyParam}}{{#formParams}}, value {{dataType}}{{/formParams}}) ({{#returnType}}{{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}, {{/returnType}}context.Context, error) {
 	{{#returnType}}var res {{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}
 	{{/returnType}}path := "{{contextPath}}{{path}}"{{#pathParams}}
 	path = strings.Replace(path, "{"+"{{baseName}}"+"}", {{paramName}}, -1){{/pathParams}}
 
-	ctxResp, err := c.{{#operationIsPost}}Post{{/operationIsPost}}{{#operationIsGet}}Get{{/operationIsGet}}{{#operationIsPut}}Put{{/operationIsPut}}{{#operationIsDelete}}Delete{{/operationIsDelete}}(ctx, path, {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}nil{{/bodyParam}}, {{#returnType}}&res{{/returnType}}{{^returnType}}nil{{/returnType}})
+	ctxResp, err := c.{{#operationIsPost}}Post{{/operationIsPost}}{{#operationIsGet}}Get{{/operationIsGet}}{{#operationIsPut}}Put{{/operationIsPut}}{{#operationIsDelete}}Delete{{/operationIsDelete}}(ctx, path, {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}{{#formParams}}value{{/formParams}}{{^formParams}}nil{{/formParams}}{{/bodyParam}}, {{#returnType}}&res{{/returnType}}{{^returnType}}nil{{/returnType}})
 	if err != nil {
 		return {{#returnType}}nil, {{/returnType}}ctxResp, err
 	}
