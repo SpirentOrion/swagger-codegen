@@ -12,6 +12,15 @@ import (
 
 {{#operation}}
 
+{{#hasQueryParams}}
+type {{{nickname}}}QueryParams struct {
+{{#queryParams}}{{#description}}
+    // {{{description}}}{{/description}}
+    {{paramName}} {{^required}}*{{/required}}{{{dataType}}} `schema:"{{baseName}}" json:"{{baseName}}{{^required}},omitempty{{/required}}" xml:"{{baseName}}" url:"{{baseName}},omitempty"`
+{{/queryParams}}
+}
+
+{{/hasQueryParams}}
 /**
  * {{notes}}
  *
@@ -20,15 +29,17 @@ import (
 {{/pathParams}}
 {{#bodyParam}} * value: {{description}}
 {{/bodyParam}}
+{{#hasQueryParams}} * params: query parameters for the request
+{{/hasQueryParams}}
 {{#returnType}} * returns {{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}
 {{/returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#bodyParam}}, value {{#typeIsModel}}*{{packageName}}.{{/typeIsModel}}{{dataType}}{{/bodyParam}}{{#formParams}}, value {{dataType}}{{/formParams}}) ({{#returnType}}{{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}, {{/returnType}}context.Context, error) {
+func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#hasQueryParams}}, params *{{{nickname}}}QueryParams{{/hasQueryParams}}{{#bodyParam}}, value {{#typeIsModel}}*{{packageName}}.{{/typeIsModel}}{{dataType}}{{/bodyParam}}{{#formParams}}, value {{dataType}}{{/formParams}}) ({{#returnType}}{{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}, {{/returnType}}context.Context, error) {
 	{{#returnType}}var res {{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}
 	{{/returnType}}path := "{{contextPath}}{{path}}"{{#pathParams}}
 	path = strings.Replace(path, "{"+"{{baseName}}"+"}", {{paramName}}, -1){{/pathParams}}
 
-	ctxResp, err := c.{{#operationIsPost}}Post{{/operationIsPost}}{{#operationIsGet}}Get{{/operationIsGet}}{{#operationIsPut}}Put{{/operationIsPut}}{{#operationIsDelete}}Delete{{/operationIsDelete}}(ctx, path, {{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}{{#formParams}}value{{/formParams}}{{^formParams}}nil{{/formParams}}{{/bodyParam}}, {{#returnType}}&res{{/returnType}}{{^returnType}}nil{{/returnType}})
+	ctxResp, err := c.{{#operationIsPost}}Post{{/operationIsPost}}{{#operationIsGet}}Get{{/operationIsGet}}{{#operationIsPut}}Put{{/operationIsPut}}{{#operationIsDelete}}Delete{{/operationIsDelete}}(ctx, path, {{#hasQueryParams}}params{{/hasQueryParams}}{{^hasQueryParams}}{{#bodyParam}}value{{/bodyParam}}{{^bodyParam}}{{#formParams}}value{{/formParams}}{{^formParams}}nil{{/formParams}}{{/bodyParam}}{{/hasQueryParams}}, {{#returnType}}&res{{/returnType}}{{^returnType}}nil{{/returnType}})
 	if err != nil {
 		return {{#returnType}}nil, {{/returnType}}ctxResp, err
 	}
