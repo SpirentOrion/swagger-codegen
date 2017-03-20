@@ -16,7 +16,7 @@ import (
 type {{{nickname}}}QueryParams struct {
 {{#queryParams}}{{#description}}
     // {{{description}}}{{/description}}
-    {{paramName}} {{^required}}*{{/required}}{{{dataType}}} `schema:"{{baseName}}" json:"{{baseName}}{{^required}},omitempty{{/required}}" xml:"{{baseName}}" url:"{{baseName}},omitempty"`
+    {{#vendorExtensions}}{{x-exportParamName}}{{/vendorExtensions}} {{^required}}*{{/required}}{{{dataType}}} `schema:"{{baseName}}" json:"{{baseName}}{{^required}},omitempty{{/required}}" xml:"{{baseName}}" url:"{{baseName}},omitempty"`
 {{/queryParams}}
 }
 
