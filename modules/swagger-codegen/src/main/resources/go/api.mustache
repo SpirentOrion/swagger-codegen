@@ -31,11 +31,11 @@ type {{{nickname}}}QueryParams struct {
 {{/bodyParam}}
 {{#hasQueryParams}} * params: query parameters for the request
 {{/hasQueryParams}}
-{{#returnType}} * returns {{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}
+{{#returnType}} * returns {{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseType}}
 {{/returnType}}
  */
-func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#hasQueryParams}}, params *{{{nickname}}}QueryParams{{/hasQueryParams}}{{#bodyParam}}, value {{#typeIsModel}}*{{packageName}}.{{/typeIsModel}}{{dataType}}{{/bodyParam}}{{#formParams}}, value {{dataType}}{{/formParams}}) ({{#returnType}}{{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}, {{/returnType}}context.Context, error) {
-	{{#returnType}}var res {{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{packageName}}.{{returnBaseTypeInitialCaps}}{{/returnTypeIsModel}}{{^returnTypeIsModel}}{{returnType}}{{/returnTypeIsModel}}
+func (c *Client) {{{nickname}}}(ctx context.Context{{#pathParams}}, {{paramName}} string{{/pathParams}}{{#hasQueryParams}}, params *{{{nickname}}}QueryParams{{/hasQueryParams}}{{#bodyParam}}, value {{#typeIsModel}}*{{packageName}}.{{/typeIsModel}}{{dataType}}{{/bodyParam}}{{#formParams}}, value {{dataType}}{{/formParams}}) ({{#returnType}}{{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{^isListContainer}}*{{/isListContainer}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseType}}, {{/returnType}}context.Context, error) {
+	{{#returnType}}var res {{#returnTypeIsModel}}{{#isListContainer}}[]{{/isListContainer}}{{packageName}}.{{/returnTypeIsModel}}{{returnBaseType}}
 	{{/returnType}}path := "{{contextPath}}{{path}}"{{#pathParams}}
 	path = strings.Replace(path, "{"+"{{baseName}}"+"}", {{paramName}}, -1){{/pathParams}}
 

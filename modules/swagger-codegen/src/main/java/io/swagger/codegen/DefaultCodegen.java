@@ -2085,6 +2085,10 @@ public class DefaultCodegen {
                             CodegenModel cmod = fromModel(op.returnBaseType, m, definitions);
                             op.discriminator = cmod.discriminator;
                             op.returnTypeIsModel = true;
+
+                            // fix the returnBaseType
+                            op.returnBaseType = cmod.classname;
+                            op.returnBaseTypeInitialCaps = initialCaps(op.returnBaseType);
                         }
                     }
 
