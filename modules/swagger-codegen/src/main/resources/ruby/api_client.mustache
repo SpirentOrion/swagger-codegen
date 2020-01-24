@@ -3,7 +3,7 @@
 =end
 
 # base_client
-require '{{gemName}}/{{apiPackage}}/base_client'
+require '{{gemName}}/{{apiPackage}}/client_base'
 
 # APIs
 {{#apiInfo}}
@@ -15,7 +15,7 @@ require '{{importPath}}'
 module {{moduleName}}
   module {{packageName}}
     class Client
-      include BaseClient
+      include ClientBase
       {{#apiInfo}}
       {{#apis}}
       include {{classname}}

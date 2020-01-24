@@ -21,7 +21,7 @@ module {{moduleName}}
   # client to perform RESTful APIs
   module ClientBase
     def initialize(base_url, api_version, proxy_settings = nil)
-      @base_url = base_url
+      @base_url = base_url + "{{{contextPath}}}"
       @api_version = api_version.to_s
       @proxy_settings = proxy_settings
     end

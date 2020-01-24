@@ -12,11 +12,11 @@ module {{moduleName}}
 
       # {{{summary}}}
       # {{{notes}}}
-    {{#allParams}}{{#required}}  # @param {{paramName}} {{description}}
-    {{/required}}{{/allParams}}  # @param [Hash] opts the optional parameters
-    {{#allParams}}{{^required}}  # @option opts [{{{dataType}}}] :{{paramName}} {{description}}{{#defaultValue}} (default to {{{.}}}){{/defaultValue}}
-    {{/required}}{{/allParams}}  # @return [{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}nil{{/returnType}}]
-      def {{operationId}}(context{{#allParams}}{{#required}}, {{paramName}}{{/required}}{{/allParams}})
+    {{#pathParams}}  # @param {{paramName}} {{description}}
+    {{/pathParams}}{{#hasBodyParam}}  # @param [Hash] req_body the request body parameters{{/hasBodyParam}}
+    {{#bodyParams}}  # @option req_body [{{{dataType}}}] :{{paramName}} {{description}}{{#defaultValue}} (default to {{{.}}}){{/defaultValue}} {{#required}}(required){{/required}}
+    {{/bodyParams}}  # @return [{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}nil{{/returnType}}]
+      def {{operationId}}(context{{#pathParams}}, {{paramName}}{{/pathParams}}{{#hasBodyParam}}, req_body{{/hasBodyParam}})
         local_var_path = "{{{path}}}"{{#pathParams}}.sub('{' + '{{baseName}}' + '}', {{paramName}}.to_s){{/pathParams}}
         {{#returnType}}
           {{#isListContainer}}
@@ -30,7 +30,7 @@ module {{moduleName}}
         ret = ''
         {{/returnType}}
 
-        {{httpMethodLowerCase}}(context, local_var_path, ret{{#allParams}}{{#bodyParam}}, {{paramName}}{{/bodyParam}}{{/allParams}})
+        {{httpMethodLowerCase}}(context, local_var_path, ret{{#hasBodyParam}}, req_body{{/hasBodyParam}})
 
         ret
       end
